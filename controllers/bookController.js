@@ -13,8 +13,18 @@ const addBook = (title) => {
   return book;
 };
 
+const getAllBooks = () => {
+  const books = Book.find().exec();
+  return books;
+};
+
 const getBookById = (bookId) => {
-  const book = Book.find({ bookId }).exec();
+  const book = Book.findById({ _id: bookId });
+  return book;
+};
+
+const deleteAllBooks = () => {
+  const book = Book.deleteMany()
   return book;
 };
 
@@ -25,4 +35,10 @@ const deleteBookById = (bookId) => {
   return book;
 };
 
-module.exports = { addBook, getBookById, deleteBookById };
+module.exports = {
+  addBook,
+  getAllBooks,
+  getBookById,
+  deleteAllBooks,
+  deleteBookById,
+};
