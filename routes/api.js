@@ -41,11 +41,11 @@ module.exports = function (app) {
     })
 
     .delete(async function (req, res) {
-      //if successful response will be 'complete delete successful'
-      const result = await bookService.deleteAllBooks();
-      if (result) {
-        res.json('complete delete successful');
-      }
+      // if successful response will be 'complete delete successful'
+      // const result = await bookService.deleteAllBooks();
+      // if (result) {
+      //   res.json('complete delete successful');
+      // }
     });
 
   app
@@ -56,20 +56,38 @@ module.exports = function (app) {
       const book = await bookService.getBookById(bookid);
       if (book) {
         res.status(200).json({
+          comments: book.comments,
           _id: book._id,
           title: book.title,
-          comments: book.comments,
+          commentcount: book.comments.length,
         });
       } else {
-        res.status(404).json('no book exists');
+        res.status(404).send('no book exists');
       }
     })
 
-    .post(function (req, res) {
+    .post(async function (req, res) {
       let bookid = req.params.id;
       let comment = req.body.comment;
+      if (comment) {
+        const book = await bookService.getBookById(bookid);
+        if (book) {
+          await bookService.addPost(bookid, comment);
+          const book = await bookService.getBookById(bookid);
+          res.status(200).json({
+            _id: book._id,
+            title: book.title,
+            comments: book.comments,
+          });
+        } else {
+          res.status(404).json('no book exists');
+        }
+      } else {
+        res.status(500).json('missing required field');
+      }
       //json res format same as .get
-    })
+    }
+    )
 
     .delete(async function (req, res) {
       let bookid = req.params.id;
