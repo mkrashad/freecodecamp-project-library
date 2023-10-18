@@ -24,7 +24,7 @@ const getBookById = (bookId) => {
 };
 
 const deleteAllBooks = () => {
-  const book = Book.deleteMany()
+  const book = Book.deleteMany();
   return book;
 };
 
@@ -32,6 +32,17 @@ const deleteBookById = (bookId) => {
   const book = Book.findOneAndRemove({ _id: bookId })
     .then((res) => res)
     .catch((err) => err);
+
+  return book;
+};
+
+const addPost = (bookId, data) => {
+  const book = Book.updateOne(
+    { _id: bookId },
+    { $push: { comments: data } },
+    { new: true }
+  )
+
   return book;
 };
 
@@ -41,4 +52,5 @@ module.exports = {
   getBookById,
   deleteAllBooks,
   deleteBookById,
+  addPost,
 };
