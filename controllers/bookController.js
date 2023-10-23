@@ -1,4 +1,5 @@
 const Book = require('../models/bookModel');
+const { ObjectId } = require('mongodb');
 
 const addBook = (title) => {
   const book = new Book({ title });
@@ -19,8 +20,13 @@ const getAllBooks = () => {
 };
 
 const getBookById = (bookId) => {
-  const book = Book.findById({ _id: bookId });
-  return book;
+  try {
+    const bookObjectId = new ObjectId(bookId);
+    const book = Book.findById({ _id: bookObjectId });
+    return book;
+  } catch (error) {
+    return null;
+  }
 };
 
 const deleteAllBooks = () => {
@@ -41,7 +47,7 @@ const addPost = (bookId, data) => {
     { _id: bookId },
     { $push: { comments: data } },
     { new: true }
-  )
+  );
 
   return book;
 };
