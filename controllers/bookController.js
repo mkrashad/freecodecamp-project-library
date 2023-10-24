@@ -35,11 +35,13 @@ const deleteAllBooks = () => {
 };
 
 const deleteBookById = (bookId) => {
-  const book = Book.findOneAndRemove({ _id: bookId })
-    .then((res) => res)
-    .catch((err) => err);
-
-  return book;
+  try {
+    const bookObjectId = new ObjectId(bookId);
+    const book = Book.findOneAndRemove({ _id: bookObjectId });
+    return book;
+  } catch (error) {
+    return null;
+  }
 };
 
 const addPost = (bookId, data) => {
